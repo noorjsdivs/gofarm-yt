@@ -162,3 +162,9 @@
     font-family: var(--font-jost);
   }
 }
+
+@layer base {
+  .hoverEffect {
+    @apply duration-300 ease-in-out transition-all cursor-pointer;
+  }
+}
