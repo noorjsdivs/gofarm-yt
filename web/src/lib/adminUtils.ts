@@ -56,7 +56,7 @@ export const isUserAdmin = (userEmail: string | null | undefined): boolean => {
  * @returns true if user is admin based on either database flag or environment variable
  */
 export const isAdmin = (
-  user: { email?: string | null; isAdmin?: boolean } | null | undefined
+  user: { email?: string | null; isAdmin?: boolean } | null | undefined,
 ): boolean => {
   if (!user) return false;
 
@@ -80,7 +80,7 @@ export const isAdmin = (
  */
 export const useIsAdmin = (
   userEmail: string | null | undefined,
-  firebaseUid?: string | null | undefined
+  firebaseUid?: string | null | undefined,
 ): boolean => {
   const [isAdminInSanity, setIsAdminInSanity] = React.useState<boolean>(false);
   const [isChecking, setIsChecking] = React.useState<boolean>(true);

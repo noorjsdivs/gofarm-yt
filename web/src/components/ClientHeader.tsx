@@ -29,6 +29,18 @@ const ClientHeader = () => {
   //   setIsMounted(true);
   // }, []);
 
+  const getSignInUrl = () => {
+    if (!isMounted || typeof window === "undefined") return "/sign-in";
+    const currentPath = window.location.pathname + window.location.search;
+    return `/sign-in?redirectTo=${encodeURIComponent(currentPath)}`;
+  };
+
+  const getSignUpUrl = () => {
+    if (!isMounted || typeof window === "undefined") return "/sign-up";
+    const currentPath = window.location.pathname + window.location.search;
+    return `/sign-up?redirectTo=${encodeURIComponent(currentPath)}`;
+  };
+
   return (
     <header className="">
       <TopHeaderBadge />
@@ -51,7 +63,26 @@ const ClientHeader = () => {
                 </div>
               </div>
             ) : (
-              <>{user ? <UserDropDown /> : <div>signin</div>}</>
+              <>
+                {user ? (
+                  <UserDropDown />
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={getSignInUrl()}
+                      className="bg-transparent border border-gofarm-green hover:bg-gofarm-green text-gofarm-green hover:text-gofarm-white px-3 py-1.5 rounded text-sm font-semibold hoverEffect"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href={getSignUpUrl()}
+                      className="bg-gofarm-green border border-gofarm-green hover:bg-transparent text-gofarm-white hover:text-gofarm-green px-3 py-1.5 rounded text-sm font-semibold hoverEffect"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </Container>

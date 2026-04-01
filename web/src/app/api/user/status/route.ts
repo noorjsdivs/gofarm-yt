@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/firebase-admin-auth";
-import { backendClient } from "@/sanity/lib/backendClient";
 import { writeClient } from "@/sanity/lib/client";
 
 export async function GET() {
@@ -10,7 +9,7 @@ export async function GET() {
     if (!user) {
       return NextResponse.json(
         { error: "User not authenticated" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -19,7 +18,7 @@ export async function GET() {
     const userId = user.uid;
 
     // Try to find user by firebaseUid first, fallback to email
-    const sanityUser = await backendClient.fetch(
+    const sanityUser = await writeClient.fetch(
       `*[_type == "user" && (firebaseUid == $userId || email == $email)][0]{
         _id,
         firebaseUid,
@@ -48,7 +47,7 @@ export async function GET() {
         employeeRole,
         employeeStatus
       }`,
-      { userId, email: userEmail }
+      { userId, email: userEmail },
     );
 
     return NextResponse.json({
@@ -60,7 +59,7 @@ export async function GET() {
     console.error("Error checking user status:", error);
     return NextResponse.json(
       { error: "Failed to check user status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -72,7 +71,7 @@ export async function POST() {
     if (!user) {
       return NextResponse.json(
         { error: "User not authenticated" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -80,14 +79,14 @@ export async function POST() {
     if (!userEmail) {
       return NextResponse.json(
         { error: "User email not found" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Check if user already exists in Sanity
-    const existingSanityUser = await backendClient.fetch(
+    const existingSanityUser = await writeClient.fetch(
       `*[_type == "userType" && email == $email][0]`,
-      { email: userEmail }
+      { email: userEmail },
     );
 
     if (existingSanityUser) {
@@ -99,7 +98,7 @@ export async function POST() {
             error:
               "Premium application was rejected. Please contact admin for assistance.",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -109,7 +108,7 @@ export async function POST() {
             success: false,
             error: "Premium application is already pending approval.",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -119,7 +118,7 @@ export async function POST() {
             success: false,
             error: "User already has premium account.",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -184,7 +183,7 @@ export async function POST() {
               premiumStatus: "pending",
             },
           }),
-        }
+        },
       );
     } catch (analyticsError) {
       console.error("Failed to track user registration event:", analyticsError);
@@ -200,7 +199,7 @@ export async function POST() {
     console.error("Error creating user in Sanity:", error);
     return NextResponse.json(
       { error: "Failed to register for premium services" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

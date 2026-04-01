@@ -1,5 +1,6 @@
 import React from "react";
 import PriceFormatter from "./PriceFormatter";
+import { cn } from "@/lib/utils";
 interface Props {
   price: number | undefined;
   discount: number | undefined;
@@ -14,12 +15,18 @@ const PriceView = ({ price, discount, className }: Props) => {
   return (
     <div className="flex items-center justify-between gap-5">
       <div className="flex items-center gap-2">
-        <PriceFormatter amount={currentPrice} className="text-gofarm-green" />
+        <PriceFormatter
+          amount={currentPrice}
+          className={cn("text-gofarm-green", className)}
+        />
         {discount && discountAmount > 0 && (
           <div className="flex items-center gap-1">
             <PriceFormatter
               amount={originalPrice}
-              className="line-through text-xs font-normal text-zinc-500"
+              className={cn(
+                "line-through text-xs font-normal text-zinc-500",
+                className,
+              )}
             />
             <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-medium">
               -{discount}%
